@@ -31,15 +31,36 @@ class _HomeState extends State<Home> {
   double euro;
 
   void _changeReal(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+    }
+    double real = double.parse(text);
+    _dolarController.text = (real / dolar).toStringAsFixed(2);
+    _euroController.text = (real / euro).toStringAsFixed(2);
   }
 
   void _changeDolar(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+    }
+    double dolar = double.parse(text);
+    _realController.text = (dolar * this.dolar).toStringAsFixed(2);
+    _euroController.text = (dolar * this.dolar / euro).toStringAsFixed(2);
   }
 
   void _changeEuro(String text) {
-    print(text);
+    if (text.isEmpty) {
+      _clearAll();
+    }
+    double euro = double.parse(text);
+    _realController.text = (euro * this.euro).toStringAsFixed(2);
+    _dolarController.text = (euro * this.euro / dolar).toStringAsFixed(2);
+  }
+
+  void _clearAll() {
+    _realController.text = "";
+    _dolarController.text = "";
+    _euroController.text = "";
   }
 
   @override
@@ -76,8 +97,10 @@ class _HomeState extends State<Home> {
                     ),
                   );
                 } else {
-                  dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                  euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                  dolar = snapshot.data["results"]["currencies"]["USD"]["buy"] +
+                      0.10;
+                  euro = snapshot.data["results"]["currencies"]["EUR"]["buy"] +
+                      0.10;
                   return SingleChildScrollView(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -114,5 +137,6 @@ Widget myTextField(
         border: OutlineInputBorder(),
         labelStyle: TextStyle(fontSize: 20, color: Colors.amber)),
     style: TextStyle(color: Colors.white, fontSize: 15),
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
   );
 }
